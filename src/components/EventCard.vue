@@ -6,7 +6,11 @@
     <div class="event-card -shadow">
       <span class="eyebrow">@{{ event.time }} on {{ event.date }}</span>
       <h4 class="title">{{ event.title }}</h4>
-      <BaseIcon name="users">{{ event.attendees.length }} attending</BaseIcon>
+      <BaseIcon name="users">
+        <span slot="attending"
+          >{{ event.attendees && event.attendees.length }} attending</span
+        >
+      </BaseIcon>
     </div>
   </router-link>
 </template>
@@ -19,7 +23,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .event-card {
   padding: 20px;
   margin-bottom: 24px;
@@ -33,6 +37,7 @@ export default {
 .event-card > .title {
   margin: 0;
 }
+
 .event-link {
   color: black;
   text-decoration: none;

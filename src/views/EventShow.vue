@@ -6,14 +6,10 @@
       <h5>Organized by {{ event.organizer ? event.organizer.name : "" }}</h5>
       <h5>Category: {{ event.category }}</h5>
     </div>
-
     <BaseIcon name="map"><h2>Location</h2></BaseIcon>
-
     <address>{{ event.location }}</address>
-
     <h2>Event details</h2>
     <p>{{ event.description }}</p>
-
     <h2>
       Attendees
       <span class="badge -fill-gradient">{{
@@ -31,20 +27,25 @@
     </ul>
   </div>
 </template>
+
 <script>
 import { mapState, mapActions } from "vuex";
 
 export default {
   props: ["id"],
   created() {
+    // this.$store.dispatch("event/fetchEvent", this.id);
     this.fetchEvent(this.id);
   },
-  computed: mapState({
-    event: (state) => state.event.event,
-  }),
+  computed: {
+    ...mapState({
+      event: (state) => state.event.event,
+    }),
+  },
   methods: mapActions("event", ["fetchEvent"]),
 };
 </script>
+
 <style scoped>
 .location {
   margin-bottom: 0;

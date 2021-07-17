@@ -1,22 +1,23 @@
-import EventService from "@/services/EventService.js";
+import EventService from "../../services/EventService";
 
 export const namespaced = true;
 
 export const state = {
-  events: [],
-  eventsTotal: 0,
+  events: {
+    data: [],
+    count: 0,
+  },
   event: {},
 };
 
 export const mutations = {
   ADD_EVENT(state, event) {
-    state.events.push(event);
+    state.events.data.push(event);
+    ++state.events.count;
   },
-  SET_EVENTS(state, events) {
-    state.events = events;
-  },
-  SET_EVENTS_TOTAL(state, eventsTotal) {
-    state.eventsTotal = eventsTotal;
+  SET_EVENTS(state, { data, count }) {
+    state.events.data = data;
+    state.events.count = +count;
   },
   SET_EVENT(state, event) {
     state.event = event;
@@ -24,42 +25,43 @@ export const mutations = {
 };
 
 export const actions = {
-  createEvent({ commit, dispatch }, event) {
-    return EventService.postEvent(event)
-      .then(() => {
-        commit("ADD_EVENT", event);
-        const notification = {
-          type: "success",
-          message: "Your event has been created!",
-        };
-        dispatch("notification/add", notification, { root: true });
-      })
-      .catch((error) => {
-        const notification = {
-          type: "error",
-          message: "There was a problem creating your event: " + error.message,
-        };
-        dispatch("notification/add", notification, { root: true });
-        throw error;
-      });
+  async createEvent({ commit, dispatch }, event) {
+    try {
+      await EventService.createEvent(event);
+      commit("ADD_EVENT", event);
+      const notification = {
+        type: "success",
+        message: "Your event has been created!",
+      };
+      dispatch("notification/add", notification, { root: true });
+    } catch (err) {
+      const notification = {
+        type: "error",
+        message: "There was a problem creating your event: " + err.message,
+      };
+      dispatch("notification/add", notification, { root: true });
+      // REVIEW for not going into another router
+      throw err;
+    }
   },
   fetchEvents({ commit, dispatch }, { perPage, page }) {
     EventService.getEvents(perPage, page)
       .then((response) => {
-        commit("SET_EVENTS_TOTAL", parseInt(response.headers["x-total-count"]));
-        commit("SET_EVENTS", response.data);
+        commit("SET_EVENTS", {
+          data: response.data,
+          count: response["headers"]["x-total-count"],
+        });
       })
-      .catch((error) => {
+      .catch((err) => {
         const notification = {
           type: "error",
-          message: "There was a problem fetching events: " + error.message,
+          message: "There was a problem fetching an events: " + err.message,
         };
         dispatch("notification/add", notification, { root: true });
       });
   },
-  fetchEvent({ commit, getters, dispatch }, id) {
-    var event = getters.getEventById(id);
-
+  fetchEvent({ commit, dispatch, getters }, id) {
+    let event = getters.getEventById(id);
     if (event) {
       commit("SET_EVENT", event);
     } else {
@@ -67,18 +69,18 @@ export const actions = {
         .then((response) => {
           commit("SET_EVENT", response.data);
         })
-        .catch((error) => {
+        .catch((err) => {
           const notification = {
             type: "error",
-            message: "There was a problem fetching event: " + error.message,
+            message: "There was a problem fetching an event: " + err.message,
           };
           dispatch("notification/add", notification, { root: true });
         });
     }
   },
 };
+
 export const getters = {
-  getEventById: (state) => (id) => {
-    return state.events.find((event) => event.id === id);
-  },
+  getEventById: (state) => (id) =>
+    state.events.data.find((event) => event.id === id),
 };

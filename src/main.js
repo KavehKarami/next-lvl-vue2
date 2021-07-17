@@ -1,15 +1,18 @@
 import Vue from "vue";
-import upperFirst from "lodash/upperFirst";
-import camelCase from "lodash/camelCase";
 import App from "./App.vue";
 import router from "./router";
-import store from "./store/store";
-import BaseIcon from "@/components/BaseIcon";
+import store from "./store";
+import upperFirst from "lodash/upperFirst";
+import camelCase from "lodash/camelCase";
 
-Vue.component("BaseIcon", BaseIcon);
+/* ------------------------- Manual Global Component ------------------------ */
 
-Vue.config.productionTip = false;
+// import BaseIcon from "@/components/BaseIcon.vue";
+// Vue.component("BaseIcon", BaseIcon);
 
+/* -------------------------------------------------------------------------- */
+
+/* ----------------------- Automatic Global Component ----------------------- */
 const requireComponent = require.context(
   "./components",
   false,
@@ -25,6 +28,9 @@ requireComponent.keys().forEach((fileName) => {
 
   Vue.component(componentName, componentConfig.default || componentConfig);
 });
+/* -------------------------------------------------------------------------- */
+
+Vue.config.productionTip = false;
 
 new Vue({
   router,

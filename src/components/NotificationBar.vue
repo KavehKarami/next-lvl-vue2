@@ -1,6 +1,7 @@
 <template>
-  <div class="notification-bar" :class="notificationTypeClass">
+  <div class="notification-bar">
     <p>{{ notification.message }}</p>
+    <span @click="remove(notification)">X</span>
   </div>
 </template>
 
@@ -19,23 +20,24 @@ export default {
       timeout: null,
     };
   },
+  methods: mapActions("notification", ["remove"]),
   mounted() {
     this.timeout = setTimeout(() => this.remove(this.notification), 5000);
   },
   beforeDestroy() {
     clearTimeout(this.timeout);
   },
-  computed: {
-    notificationTypeClass() {
-      return `-text-${this.notification.type}`;
-    },
-  },
-  methods: mapActions("notification", ["remove"]),
 };
 </script>
 
 <style scoped>
 .notification-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin: 1em 0 1em;
+  padding: 8px 12px;
+  background: #cecece;
+  border-radius: 5px;
 }
 </style>
