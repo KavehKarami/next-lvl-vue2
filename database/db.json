@@ -198,6 +198,20 @@
       "date": "",
       "time": "",
       "attendees": []
+    },
+    {
+      "id": 3399947,
+      "category": "nature",
+      "organizer": {
+        "id": "Kevin_Carlsen",
+        "name": "Kevin Carlsen"
+      },
+      "title": "test progress bar",
+      "description": "",
+      "location": "",
+      "date": "",
+      "time": "",
+      "attendees": []
     }
   ]
 }
