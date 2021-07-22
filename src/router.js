@@ -28,11 +28,33 @@ const router = new Router({
       component: EventShow,
       props: true,
       beforeEnter: (routeTo, routeFrom, next) => {
-        store.dispatch("event/fetchEvent", routeTo.params.id).then((event) => {
-          routeTo.params.event = event;
-          next();
-        });
+        store
+          .dispatch("event/fetchEvent", routeTo.params.id)
+          .then((event) => {
+            routeTo.params.event = event;
+            next();
+          })
+          .catch((error) => {
+            error.response && error.response.status === 404
+              ? next({ name: "not-found", params: { resource: "event" } })
+              : next({ name: "network-issue" });
+          });
       },
+    },
+    {
+      path: "/404",
+      name: "not-found",
+      props: true,
+      component: () => import("./views/NotFound.vue"),
+    },
+    {
+      path: "/network-issue",
+      name: "network-issue",
+      component: () => import("./views/NetworkIssue.vue"),
+    },
+    {
+      path: "*",
+      redirect: { name: "not-found", params: { resource: "page" } },
     },
   ],
 });
