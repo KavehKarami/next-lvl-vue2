@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="event-header">
-      <span class="eyebrow">@{{ event.time }} on {{ event.date }}</span>
+      <span class="eyebrow">
+        @{{ event.time }} on {{ event.date | humanDate }}
+      </span>
       <h1 class="title">{{ event.title }}</h1>
       <h5>Organized by {{ event.organizer ? event.organizer.name : "" }}</h5>
       <h5>Category: {{ event.category }}</h5>
@@ -41,6 +43,18 @@ export default {
   //     next();
   //   });
   // },
+
+  // REVIEW: write filter with local way
+  filters: {
+    humanDate(value) {
+      let date = new Date(value);
+      return date.toLocaleString(["en-US"], {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    },
+  },
 };
 </script>
 

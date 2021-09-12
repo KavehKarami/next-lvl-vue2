@@ -5,6 +5,11 @@ import store from "./store";
 import upperFirst from "lodash/upperFirst";
 import camelCase from "lodash/camelCase";
 import "nprogress/nprogress.css";
+import DateFilter from "./filters/date";
+
+/* ------------------------------ global filter ----------------------------- */
+Vue.filter("date", DateFilter);
+/* -------------------------------------------------------------------------- */
 
 /* ------------------------- Manual Global Component ------------------------ */
 
