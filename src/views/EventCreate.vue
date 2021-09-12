@@ -42,7 +42,9 @@
         :options="times"
       ></base-select>
 
-      <input type="submit" class="button -fill-gradient" value="Submit" />
+      <base-button @click="logger" type="submit" buttonClass="-fill-gradient">
+        Submit
+      </base-button>
     </form>
   </div>
 </template>
@@ -115,6 +117,9 @@ export default {
         time: "",
         attendees: [],
       };
+    },
+    logger() {
+      console.log(1);
     },
     async submitEvent() {
       try {
